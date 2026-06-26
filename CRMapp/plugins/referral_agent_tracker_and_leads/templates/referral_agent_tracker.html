@@ -1,0 +1,581 @@
+﻿{% extends "index.html" %}
+{% block content %}
+
+<style>
+    /* Grid: 1 card on phones, 2 cards from 860px+ */
+    .grid {
+        display: grid;
+        gap: 22px;
+        grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 860px) {
+        .grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-header {
+        background: #1d4ed8;
+        color: #fff;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .card-title {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: .2px;
+    }
+
+    .card-sub {
+        margin: 4px 0 0;
+        font-size: 13px;
+        opacity: .92;
+    }
+
+    .card-body {
+        padding: 12px 12px 14px;
+    }
+
+    .btn {
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,.6);
+        background: rgba(255,255,255,.15);
+        color: #fff;
+        cursor: pointer;
+    }
+
+        .btn:hover {
+            background: rgba(255,255,255,.25);
+        }
+
+    .table-wrap {
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: auto;
+        font-size: 12px;
+    }
+
+    /* Keep headers on one line; let cells wrap */
+    thead th {
+        white-space: nowrap;
+    }
+
+    td {
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.3;
+    }
+
+    thead th {
+        background: #f3f4f6;
+        text-align: left;
+        padding: 6px 8px;
+        border-bottom: 1px solid #e5e7eb;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        font-weight: 700;
+    }
+
+    tbody td {
+        padding: 6px 8px;
+        line-height: 1.15;
+        border-bottom: 1px solid #f3f4f6;
+        vertical-align: top;
+    }
+
+    /* Compact Date & Referral (desktop) */
+    .col-date {
+        width: 90px;
+    }
+
+    .col-referral {
+        width: 50px;
+    }
+
+    .ref-badge {
+        display: inline-block;
+        font-size: 10px;
+        padding: 1px 6px;
+        border-radius: 999px;
+        background: #DBEAFE;
+        color: #1E40AF;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    tbody tr:nth-child(odd) {
+        background: #fff;
+    }
+
+    tbody tr:nth-child(even) {
+        background: #fafafa;
+    }
+
+    tbody tr:hover {
+        background: #eef2ff;
+    }
+
+    .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* Service chips */
+    .chips {
+        line-height: 1.1;
+    }
+
+    .chip {
+        display: inline-block;
+        font-size: 10.5px;
+        padding: 1px 6px;
+        margin: 1px 4px 1px 0;
+        border-radius: 999px;
+        white-space: nowrap;
+    }
+
+    .chip-water {
+        background: #E0F2FE;
+        color: #075985;
+    }
+
+    .chip-electric {
+        background: #DCFCE7;
+        color: #065F46;
+    }
+
+    .chip-internet {
+        background: #EDE9FE;
+        color: #5B21B6;
+    }
+
+    .chip-mobile {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .chip-generic {
+        background: #E5E7EB;
+        color: #374151;
+    }
+
+    /* Provider pills: compact */
+    .pill {
+        display: inline-block;
+        font-size: 11px;
+        padding: 1px 6px;
+        border-radius: 999px;
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: top;
+    }
+
+    .pill-electric {
+        background: #DCFCE7;
+        color: #065F46;
+    }
+
+    .pill-internet {
+        background: #EDE9FE;
+        color: #5B21B6;
+    }
+
+    .pill-mobile {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    .page-title {
+        font-size: 22px;
+        font-weight: 800;
+        margin: 0 0 16px;
+    }
+
+    .muted {
+        color: #6b7280;
+    }
+
+    /* Stat badges row in header (since date) */
+    .stat-row {
+        margin-top: 6px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .stat {
+        font-size: 11px;
+        padding: 2px 6px;
+        border-radius: 999px;
+    }
+
+    .stat-water {
+        background: #E0F2FE;
+        color: #075985;
+    }
+
+    .stat-electric {
+        background: #DCFCE7;
+        color: #065F46;
+    }
+
+    .stat-internet {
+        background: #EDE9FE;
+        color: #5B21B6;
+    }
+
+    .stat-mobile {
+        background: #FEF3C7;
+        color: #92400E;
+    }
+
+    /* Provider breakdown row in header */
+    .prov-row {
+        margin-top: 6px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        font-size: 11px;
+    }
+
+    .prov-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .prov-label {
+        opacity: .9;
+        font-weight: 700;
+    }
+
+    .prov-badge {
+        display: inline-block;
+        padding: 2px 6px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.35);
+    }
+
+    .prov-more {
+        opacity: .9;
+    }
+
+    /* inline date inside "(since …)" */
+    .inline-date {
+        display: inline;
+    }
+
+    .date-inline {
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 11px;
+        padding: 0 2px;
+    }
+
+        .date-inline:focus {
+            outline: none;
+        }
+
+        .date-inline::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: .85;
+        }
+
+    /* Heights for scroll comfort */
+    .js-preview .table-wrap {
+        max-height: 260px;
+    }
+
+    .js-full .table-wrap {
+        max-height: 50vh;
+    }
+
+    /* Mobile stacked rows */
+    @media (max-width: 640px) {
+        .table-wrap {
+            overflow: visible;
+        }
+
+        thead {
+            display: none;
+        }
+
+        table, tbody, tr, td {
+            display: block;
+            width: 100%;
+        }
+
+        tr {
+            border: 1px solid #eee;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        tbody td {
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            gap: 8px;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            tbody td:last-child {
+                border-bottom: 0;
+            }
+
+            tbody td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #6b7280;
+            }
+
+        .pill {
+            max-width: 100%;
+            white-space: normal;
+        }
+
+        .ref-badge {
+            max-width: 100%;
+        }
+
+        .col-date, .col-referral {
+            width: auto;
+        }
+    }
+</style>
+
+<h2 class="page-title">Referral Agent Tracker <span class="muted">(live, per-agent)</span></h2>
+
+<script>
+    function toggleTab(id) {
+        const c = document.getElementById(id),
+            p = c.querySelector('.js-preview'),
+            f = c.querySelector('.js-full'),
+            b = c.querySelector('.js-toggle');
+        const full = f.style.display === 'block';
+        f.style.display = full ? 'none' : 'block';
+        p.style.display = full ? 'block' : 'none';
+        b.textContent = full ? 'Show all' : 'Show less';
+    }
+</script>
+
+{% if cards and cards|length > 0 %}
+<div class="grid">
+    {% for card in cards %}
+    {% set cid = 'card_' ~ loop.index %}
+    <div class="card" id="{{ cid }}">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title">{{ card.tab }}</h3>
+                <p class="card-sub">{{ card.total }} entries{% if card.last_date %} · latest {{ card.last_date }}{% endif %}</p>
+
+                <!-- MTD/selected stats -->
+                <div class="stat-row">
+                    <span class="stat stat-water" title="Water sign-ups">Water: {{ (card.stats or {}).get('water', 0) }}</span>
+                    <span class="stat stat-electric" title="Electricity sign-ups">Elec: {{ (card.stats or {}).get('elec', 0) }}</span>
+                    <span class="stat stat-internet" title="Internet sign-ups">Net: {{ (card.stats or {}).get('net', 0) }}</span>
+                    <span class="stat stat-mobile" title="Mobile sign-ups">Mob: {{ (card.stats or {}).get('mobile', 0) }}</span>
+
+                    <!-- inline date picker inside the parentheses; affects stats ONLY -->
+                    <form method="get" class="inline-date" style="margin-left:4px;" onchange="this.submit()">
+                        (
+                        <span style="font-size:11px;opacity:.9;margin-right:4px;">since</span>
+                        <input type="date"
+                               class="date-inline"
+                               name="since_{{ card.slug }}"
+                               value="{{ card.stats_since_ui }}">
+                        )
+                        {# preserve other tabs' chosen stats dates #}
+                        {% if stats_dates %}
+                        {% for s, val in stats_dates.items() %}
+                        {% if s != card.slug and val %}
+                        <input type="hidden" name="since_{{ s }}" value="{{ val }}">
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                    </form>
+                </div>
+
+                <!-- Provider breakdown (top 3 per service) -->
+                {% set pc = card.provider_counts or {} %}
+                <div class="prov-row">
+                    {% set e = pc.get('Electricity', []) %}
+                    {% if e %}
+                    <div class="prov-group">
+                        <span class="prov-label">Elec:</span>
+                        {% for it in e[:3] %}
+                        <span class="prov-badge" title="{{ it.name }}">{{ it.name }} {{ it.count }}</span>
+                        {% endfor %}
+                        {% if e|length > 3 %}<span class="prov-more">+{{ e|length - 3 }} more</span>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% set n = pc.get('Internet', []) %}
+                    {% if n %}
+                    <div class="prov-group">
+                        <span class="prov-label">Net:</span>
+                        {% for it in n[:3] %}
+                        <span class="prov-badge" title="{{ it.name }}">{{ it.name }} {{ it.count }}</span>
+                        {% endfor %}
+                        {% if n|length > 3 %}<span class="prov-more">+{{ n|length - 3 }} more</span>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% set m = pc.get('Mobile', []) %}
+                    {% if m %}
+                    <div class="prov-group">
+                        <span class="prov-label">Mob:</span>
+                        {% for it in m[:3] %}
+                        <span class="prov-badge" title="{{ it.name }}">{{ it.name }} {{ it.count }}</span>
+                        {% endfor %}
+                        {% if m|length > 3 %}<span class="prov-more">+{{ m|length - 3 }} more</span>{% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if card.all_rows and card.all_rows|length > (card.preview|length if card.preview else 0) %}
+            <button class="btn js-toggle" type="button" onclick="toggleTab('{{ cid }}')">Show all</button>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            {% if card.preview and card.preview|length > 0 %}
+
+            <!-- Preview -->
+            <div class="js-preview">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="col-date">Date</th>
+                                <th class="col-referral">Referral</th>
+                                <th>Customer</th>
+                                <th>Services</th>
+                                <th title="Electricity">Electricity</th>
+                                <th title="Internet">Internet</th>
+                                <th title="Mobile">Mobile</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in card.preview %}
+                            {% set svc_txt = r.get('Services','') %}
+                            <tr>
+                                <td class="mono" data-label="Date">{{ r.get('Date','') }}</td>
+                                <td class="col-referral" data-label="Referral"><span class="ref-badge">{{ r.get('Referral','') }}</span></td>
+                                <td data-label="Customer">{{ r.get('Customer','') }}</td>
+                                <td class="chips" data-label="Services">
+                                    {% if svc_txt %}
+                                    {% for chip in svc_txt.split(',') %}
+                                    {% set cls = (
+                                    'chip chip-water' if 'water' in chip|lower else
+                                    'chip chip-electric' if 'electric' in chip|lower else
+                                    'chip chip-internet' if 'internet' in chip|lower else
+                                    'chip chip-mobile' if ('mobile' in chip|lower or 'cell' in chip|lower) else
+                                    'chip chip-generic'
+                                    ) %}
+                                    <span class="{{ cls }}">{{ chip.strip() }}</span>
+                                    {% endfor %}
+                                    {% endif %}
+                                </td>
+                                <td data-label="Electricity">{% if r.get('Electricity_display') %}<span class="pill pill-electric" title="{{ r.get('Electricity') }}">{{ r.get('Electricity_display') }}</span>{% endif %}</td>
+                                <td data-label="Internet">{% if r.get('Internet_display') %}<span class="pill pill-internet" title="{{ r.get('Internet') }}">{{ r.get('Internet_display') }}</span>{% endif %}</td>
+                                <td data-label="Mobile">{% if r.get('Mobile_display') %}<span class="pill pill-mobile" title="{{ r.get('Mobile') }}">{{ r.get('Mobile_display') }}</span>{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Full list -->
+            <div class="js-full" style="display:none;">
+                <div class="table-wrap">
+                    <table class="full">
+                        <thead>
+                            <tr>
+                                <th class="col-date">Date</th>
+                                <th class="col-referral">Referral</th>
+                                <th>Customer</th>
+                                <th>Services</th>
+                                <th>Electricity</th>
+                                <th>Internet</th>
+                                <th>Mobile</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in card.all_rows %}
+                            {% set svc_txt = r.get('Services','') %}
+                            <tr>
+                                <td class="mono" data-label="Date">{{ r.get('Date','') }}</td>
+                                <td class="col-referral" data-label="Referral"><span class="ref-badge">{{ r.get('Referral','') }}</span></td>
+                                <td data-label="Customer">{{ r.get('Customer','') }}</td>
+                                <td class="chips" data-label="Services">
+                                    {% if svc_txt %}
+                                    {% for chip in svc_txt.split(',') %}
+                                    {% set cls = (
+                                    'chip chip-water' if 'water' in chip|lower else
+                                    'chip chip-electric' if 'electric' in chip|lower else
+                                    'chip chip-internet' if 'internet' in chip|lower else
+                                    'chip chip-mobile' if ('mobile' in chip|lower or 'cell' in chip|lower) else
+                                    'chip chip-generic'
+                                    ) %}
+                                    <span class="{{ cls }}">{{ chip.strip() }}</span>
+                                    {% endfor %}
+                                    {% endif %}
+                                </td>
+                                <td data-label="Electricity">{% if r.get('Electricity_display') %}<span class="pill pill-electric" title="{{ r.get('Electricity') }}">{{ r.get('Electricity_display') }}</span>{% endif %}</td>
+                                <td data-label="Internet">{% if r.get('Internet_display') %}<span class="pill pill-internet" title="{{ r.get('Internet') }}">{{ r.get('Internet_display') }}</span>{% endif %}</td>
+                                <td data-label="Mobile">{% if r.get('Mobile_display') %}<span class="pill pill-mobile" title="{{ r.get('Mobile') }}">{{ r.get('Mobile_display') }}</span>{% endif %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {% else %}
+            <p class="muted">No entries.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="muted">No tabs found in the spreadsheet.</p>
+{% endif %}
+
+{% endblock %}

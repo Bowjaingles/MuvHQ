@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/CRMapp/referralsearchapp-66acbc64e9b3.json
+/CRMapp/plugins/new_customer_entry/referralsearchapp-66acbc64e9b3.json

@@ -1,0 +1,70 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>34bf1778-8c57-4918-9b41-8398711f2775</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>CRMapp.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>CRMapp</Name>
+    <RootNamespace>CRMapp</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="CRMapp.py" />
+    <Compile Include="google_sheets_reader.py" />
+    <Compile Include="plugins\leads_central\email_templates.py" />
+    <Compile Include="plugins\leads_central\leads_central.py" />
+    <Compile Include="plugins\leads_central\benis.py" />
+    <Compile Include="plugins\login_plugin\create_user.py" />
+    <Compile Include="plugins\login_plugin\login_plugin.py" />
+    <Compile Include="plugins\new_customer_entry\new_customer_entry.py" />
+    <Compile Include="plugins\referral_agent_tracker_and_leads\referral_agent_tracker_and_leads.py" />
+    <Compile Include="plugins\customer_search\customer_search.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="plugins\" />
+    <Folder Include="plugins\customer_search\templates\" />
+    <Folder Include="plugins\leads_central\" />
+    <Folder Include="plugins\leads_central\templates\" />
+    <Folder Include="plugins\login_plugin\" />
+    <Folder Include="plugins\login_plugin\templates\" />
+    <Folder Include="plugins\new_customer_entry\" />
+    <Folder Include="plugins\new_customer_entry\static\" />
+    <Folder Include="plugins\new_customer_entry\templates\" />
+    <Folder Include="plugins\referral_agent_tracker_and_leads\" />
+    <Folder Include="plugins\customer_search\" />
+    <Folder Include="plugins\referral_agent_tracker_and_leads\templates\" />
+    <Folder Include="templates\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="plugins\customer_search\templates\customer_search.html" />
+    <Content Include="plugins\leads_central\templates\leads_central.html" />
+    <Content Include="plugins\login_plugin\templates\signup.html" />
+    <Content Include="plugins\login_plugin\templates\login.html" />
+    <Content Include="plugins\new_customer_entry\templates\new_customer_entry.html" />
+    <Content Include="plugins\leads_central\templates\view_lead.html" />
+    <Content Include="plugins\referral_agent_tracker_and_leads\templates\referral_agent_tracker.html" />
+    <Content Include="referralsearchapp-66acbc64e9b3.json" />
+    <Content Include="templates\index.html" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>

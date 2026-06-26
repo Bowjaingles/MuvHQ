@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CMNH Central</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 12px;
+        }
+
+            nav a {
+                color: #fff;
+                margin-right: 15px;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                nav a:hover {
+                    text-decoration: underline;
+                }
+
+        .content {
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global header navigation -->
+    <nav>
+        <a href="/new_customer">Customer Entry</a>
+        <a href="/customer_search">Master Search</a>
+        <a href="/referral_agent_tracker">Referral Agent Database</a>
+        <a href="/leads_central">Leads</a>
+    </nav>
+
+    <!-- Plugin-specific content appears below -->
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,548 @@
+﻿{% extends 'index.html' %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #121212;
+        color: #ffffff;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .container {
+        max-width: 1400px;
+    }
+
+    .card {
+        background-color: #1f1f1f;
+        border-radius: 8px;
+        box-shadow: none;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+        .card:hover {
+            background-color: #272727;
+        }
+
+    .header {
+        border-bottom: 2px solid #00ADB5;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+        .header h2 {
+            color: #00ADB5;
+            margin: 0;
+            text-align: center;
+        }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+    .form-control,
+    .form-select {
+        background-color: #333;
+        border: 1px solid #444;
+        color: #ddd;
+        border-radius: 5px;
+        padding: 0.5rem;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #00ADB5;
+            box-shadow: 0 0 5px rgba(0, 173, 181, 0.5);
+            outline: none;
+        }
+
+    .btn-primary {
+        background-color: #00ADB5;
+        border: none;
+        border-radius: 5px;
+        transition: transform 0.2s;
+        padding: 0.6rem 1.5rem;
+        margin-top: 1rem;
+        color: #121212;
+        width: 100%;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #008B94;
+            transform: translateY(-2px);
+        }
+
+    .btn-outline-primary {
+        border: 1px solid #00ADB5;
+        color: #00ADB5;
+        background-color: transparent;
+        border-radius: 5px;
+        padding: 0.6rem 1.5rem;
+        transition: background-color 0.2s;
+        width: 100%;
+        margin-top: 0.5rem;
+        cursor: pointer;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #00ADB5;
+            color: #121212;
+        }
+
+    .btn-warning-custom {
+        border: 1px solid #ffc107;
+        color: #ffc107;
+        background-color: transparent;
+        border-radius: 5px;
+        padding: 0.6rem 1.5rem;
+        width: 100%;
+        margin-top: 0.5rem;
+        cursor: pointer;
+    }
+
+        .btn-warning-custom:hover {
+            background-color: #ffc107;
+            color: #121212;
+        }
+
+    .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+    }
+
+        .checkbox-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            background-color: #333;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin: 0;
+        }
+
+    #summary-content {
+        line-height: 1.6;
+    }
+
+    #provider-card {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+
+    #announcement {
+        text-align: center;
+        padding: 0.75rem;
+        font-weight: bold;
+        color: #00ADB5;
+    }
+
+    #existing-customer-box {
+        display: none;
+        background-color: #2b2b2b;
+        border: 1px solid #00ADB5;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+        #existing-customer-box strong {
+            color: #00ADB5;
+            font-size: 1.1rem;
+        }
+
+        #existing-customer-box p {
+            margin-top: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+</style>
+
+<div class="container py-5">
+    <div style="display: flex; gap: 25px;">
+        <div style="flex: 1;">
+            <div class="header"><h2>New Customer Entry</h2></div>
+
+            <form id="customer-form" class="card">
+                <div id="announcement"></div>
+
+                <div id="existing-customer-box">
+                    <strong>Existing customer found.</strong>
+                    <p>This customer already exists. Choose how this entry should be handled.</p>
+
+                    <button type="button" id="existing-new-address-btn" class="btn-outline-primary">
+                        Existing Customer, New Address
+                    </button>
+
+                    <button type="button" id="update-existing-btn" class="btn-warning-custom">
+                        Update Existing Customer
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label for="signup_date">Sign-up Date</label>
+                    <input name="signup_date" type="date" id="signup_date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="referral_source">Referral Source</label>
+                    <select name="referral_source" id="referral_source" class="form-select" required>
+                        <option value="" disabled selected>Select referral source</option>
+                        <option value="Linnemann">Linnemann</option>
+                        <option value="JWC">JWC</option>
+                        <option value="Home Team">Home Team</option>
+                        <option value="Morris">Morris</option>
+                        <option value="Shine">Shine</option>
+                        <option value="BWR">BWR</option>
+                        <option value="Everyday Rentals">Everyday Rentals</option>
+                        <option value="MCG">MCG</option>
+                        <option value="ELISHA">Elisha</option>
+                        <option value="EARL">Earl</option>
+                        <option value="SOPHIA">Sophia</option>
+                        <option value="WEICHART">Weichert</option>
+                        <option value="RAY">Ray</option>
+                        <option value="ARRI">Arri</option>
+                        <option value="AD ASSETS">AD Assets</option>
+                        <option value="AJRE">AJRE</option>
+                        <option value="Google">Google</option>
+                        <option value="Mall">Mall</option>
+                        <option value="CTX">CTX</option>
+                        <option value="Return">Return</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <input type="text" name="referral_source_other" id="referral_source_other" class="form-control mt-2" placeholder="Please specify referral source" style="display:none;">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 2;">
+                        <label for="customer_name">Name</label>
+                        <input name="customer_name" id="customer_name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group" style="flex: 1;">
+                        <label for="date_of_birth">Date of Birth</label>
+                        <input name="date_of_birth" id="date_of_birth" type="date" class="form-control" required>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 2;">
+                        <label for="address">Address</label>
+                        <input name="address" id="address" class="form-control" required>
+                    </div>
+
+                    <div class="form-group" style="flex: 1;">
+                        <label for="previous_address">Previous Address</label>
+                        <input name="previous_address" id="previous_address" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone #</label>
+                    <input name="phone" id="phone" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input name="email" type="email" id="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Service(s)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="services" value="Internet">Internet</label>
+                        <label><input type="checkbox" name="services" value="Electricity">Electricity</label>
+                        <label><input type="checkbox" name="services" value="Water">Water</label>
+                        <label><input type="checkbox" name="services" value="Mobile">Mobile</label>
+                        <label><input type="checkbox" name="services" value="Home Security">Home Security</label>
+                        <label><input type="checkbox" name="services" value="Solar">Solar</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Submit Customer</button>
+            </form>
+        </div>
+
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 1rem;">
+            <div>
+                <div class="header"><h2>Customer Summary</h2></div>
+                <div class="card"><div id="summary-content">No customer yet.</div></div>
+            </div>
+
+            <div>
+                <div class="header"><h2>Provider Information</h2></div>
+                <div id="provider-card" class="card">
+                    <form id="provider-details-form"></form>
+                    <button id="submit-provider" class="btn-outline-primary">Submit Provider Info</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+    document.getElementById('signup_date').valueAsDate = new Date();
+
+    const byId = id => document.getElementById(id);
+
+    const providerOptions = {
+        "Internet": ["Spectrum (254)634-3145", "AT&T (800)331-0500", "Astound (800)427-8686", "BrightSpeed (833)692-7773", "Frontier (800)921-8101", "Kinetic/Windstream (800)537-7755", "Metronet", "Optimum", "Xfinity", "Cox", "CenturyLink", "TMobile"],
+        "Electricity": ["Frontier Utilities (866)926-8192", "Varsity Energy (877)827-7389", "Veteran Energy (888)367-7470", "Express Energy", "4Change Energy", "Chariot Energy", "APG&E", "TXU Energy", "Reliant", "Discount Power", "Gexa Energy", "Cirro Energy", "Just Energy", "Constellation", "Direct Energy", "Tara Energy", "Amigo Energy", "Xoom Energy", "Payless Power"],
+        "Water": ["Killeen (254) 501-7800", "Harker Heights (254)953-5630", "Copperas Cove (254)547-8718", "Temple (254)298-5616", "Belton (254)933-5800", "Waco", "Salado", "Corpus Christi (361)826-2489", "McAllen", "Edinburg", "Arlington", "Georgetown"],
+        "Mobile": ["Spectrum Mobile (254)634-3145", "AT&T"],
+        "Home Security": ["ADT (800)616-2900", "Vivint (800)216-5232"],
+        "Solar": []
+    };
+
+    let currentCustomerData = {};
+    let pendingCustomerData = null;
+
+    function showAnnouncement(message, timeout = 3000) {
+        byId('announcement').textContent = message || '';
+
+        if (timeout) {
+            setTimeout(() => {
+                byId('announcement').textContent = '';
+            }, timeout);
+        }
+    }
+
+    function getReferralSource(formData) {
+        let referralSource = formData.get('referral_source');
+
+        if (referralSource === 'Other') {
+            referralSource = (formData.get('referral_source_other') || '').trim();
+        }
+
+        return referralSource;
+    }
+
+    function selectedServicesArray() {
+        return Array.from(document.querySelectorAll('input[name="services"]:checked'))
+            .map(cb => cb.value);
+    }
+
+    function collectCustomerData(action = '') {
+        const form = byId('customer-form');
+        const formData = new FormData(form);
+        const selectedServices = selectedServicesArray();
+
+        return {
+            signup_date: formData.get('signup_date'),
+            referral_source: getReferralSource(formData),
+            customer_name: formData.get('customer_name'),
+            address: formData.get('address'),
+            previous_address: formData.get('previous_address'),
+            date_of_birth: formData.get('date_of_birth'),
+            phone: formData.get('phone'),
+            email: (formData.get('email') || '').trim().toLowerCase(),
+            services: selectedServices.join(', '),
+            action: action
+        };
+    }
+
+    function summaryFromCustomer(c) {
+        return `${c.customer_name || ''}<br>
+            DOB: ${c.date_of_birth || ''}<br>
+            ${c.address || ''}<br>
+            Prev Address: ${c.previous_address || ''}<br>
+            ${c.phone || ''}<br>
+            ${c.email || ''}<br>
+            ${c.services || ''}`;
+    }
+
+    function buildProviderForm(servicesArr) {
+        const form = byId('provider-details-form');
+
+        if (!servicesArr || !servicesArr.length) {
+            form.innerHTML = '';
+            return;
+        }
+
+        form.innerHTML = servicesArr.map(service => {
+            const opts = providerOptions[service] || [];
+            const optionsHtml = opts.map(opt => `<option>${opt}</option>`).join('');
+
+            let html = `
+                <div class="form-group">
+                    <label>${service} Provider</label>
+                    <select class="form-select provider-select" data-service="${service}">
+                        <option selected disabled>Select a provider</option>
+                        ${optionsHtml}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>${service} Account #</label>
+                    <input class="form-control provider-account" placeholder="${service} Account #" data-service="${service}">
+                </div>
+
+                <div class="form-group">
+                    <label>${service} Start Date</label>
+                    <input class="form-control provider-start-date" type="date" data-service="${service}">
+                </div>
+            `;
+
+            if (service === 'Mobile') {
+                html += `
+                    <div class="form-group">
+                        <label>${service} Serial Number</label>
+                        <input class="form-control provider-serial" placeholder="${service} Serial Number" data-service="${service}">
+                    </div>
+                `;
+            }
+
+            return html;
+        }).join('');
+    }
+
+    function resetEntryScreen() {
+        byId('customer-form').reset();
+        byId('signup_date').valueAsDate = new Date();
+        byId('provider-details-form').innerHTML = '';
+        byId('summary-content').innerHTML = 'No customer yet.';
+        byId('existing-customer-box').style.display = 'none';
+        byId('referral_source_other').style.display = 'none';
+        byId('referral_source_other').required = false;
+
+        currentCustomerData = {};
+        pendingCustomerData = null;
+    }
+
+    async function submitCustomer(payload) {
+        try {
+            const res = await axios.post('/submit_customer', payload);
+            const result = res.data || {};
+
+            if (result.status === 'existing_customer_found') {
+                pendingCustomerData = payload;
+
+                byId('existing-customer-box').style.display = 'block';
+                showAnnouncement('Existing customer found. Choose one of the two buttons.', 0);
+
+                return;
+            }
+
+            currentCustomerData = { ...payload };
+            currentCustomerData.row_index = result.row_index;
+
+            pendingCustomerData = null;
+            byId('existing-customer-box').style.display = 'none';
+
+            byId('summary-content').innerHTML = summaryFromCustomer(currentCustomerData);
+
+            const servicesArr = (currentCustomerData.services || '')
+                .split(',')
+                .map(s => s.trim())
+                .filter(Boolean);
+
+            buildProviderForm(servicesArr);
+
+            showAnnouncement(result.message || 'Customer saved.');
+        } catch (err) {
+            console.error(err);
+            showAnnouncement('Customer save failed. Check the console/server log.', 0);
+        }
+    }
+
+    byId('customer-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const payload = collectCustomerData('');
+        submitCustomer(payload);
+    });
+
+    byId('existing-new-address-btn').addEventListener('click', function () {
+        if (!pendingCustomerData) {
+            showAnnouncement('No pending customer data found.', 3000);
+            return;
+        }
+
+        const payload = { ...pendingCustomerData, action: 'new_address' };
+        submitCustomer(payload);
+    });
+
+    byId('update-existing-btn').addEventListener('click', function () {
+        if (!pendingCustomerData) {
+            showAnnouncement('No pending customer data found.', 3000);
+            return;
+        }
+
+        const payload = { ...pendingCustomerData, action: 'update_existing' };
+        submitCustomer(payload);
+    });
+
+    byId('submit-provider').addEventListener('click', function () {
+        if (!currentCustomerData || !currentCustomerData.email) {
+            showAnnouncement('Please submit the customer first.', 3000);
+            return;
+        }
+
+        const providerDetails = [];
+
+        document.querySelectorAll('#provider-details-form select.provider-select').forEach(select => {
+            const service = select.getAttribute('data-service');
+
+            const accountInput = document.querySelector(`input.provider-account[data-service="${service}"]`);
+            const startInput = document.querySelector(`input.provider-start-date[data-service="${service}"]`);
+            const serialInput = document.querySelector(`input.provider-serial[data-service="${service}"]`);
+
+            providerDetails.push({
+                service: service,
+                provider: select.value || '',
+                account_number: accountInput ? accountInput.value : '',
+                start_date: startInput ? startInput.value : '',
+                serial_number: serialInput ? serialInput.value : ''
+            });
+        });
+
+        axios.post('/submit_provider', {
+            providers: providerDetails,
+            email: (currentCustomerData.email || '').toLowerCase(),
+            customer_info: currentCustomerData,
+            row_index: currentCustomerData.row_index
+        }).then(res => {
+            const result = res.data || {};
+
+            if (result.email_sent === false) {
+                showAnnouncement('Provider details saved. Confirmation email failed.', 0);
+            } else {
+                showAnnouncement('Provider details saved.');
+            }
+
+            resetEntryScreen();
+        }).catch(err => {
+            console.error(err);
+            showAnnouncement('Provider save failed. Check the console/server log.', 0);
+        });
+    });
+
+    byId('referral_source').addEventListener('change', function () {
+        const otherInput = byId('referral_source_other');
+
+        if (this.value === 'Other') {
+            otherInput.style.display = 'block';
+            otherInput.required = true;
+        } else {
+            otherInput.style.display = 'none';
+            otherInput.required = false;
+            otherInput.value = '';
+        }
+    });
+</script>
+
+{% endblock %}

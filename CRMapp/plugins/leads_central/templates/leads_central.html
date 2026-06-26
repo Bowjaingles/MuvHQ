@@ -1,0 +1,457 @@
+﻿{% extends 'index.html' %}
+{% block content %}
+
+<style>
+    body {
+        background-color: #121212;
+        color: #ffffff;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .container {
+        max-width: 1400px;
+    }
+
+    .card {
+        background-color: #1f1f1f;
+        border-radius: 8px;
+        box-shadow: none;
+        padding: 1.5rem;
+    }
+
+        .card:hover {
+            background-color: #272727;
+        }
+
+    .header {
+        border-bottom: 2px solid #00ADB5;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+        .header h2 {
+            color: #00ADB5;
+            margin: 0;
+            text-align: center;
+        }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+        .form-group label {
+            width: 200px;
+            font-weight: bold;
+        }
+
+    .form-control, .form-select {
+        flex: 1;
+        background-color: #333;
+        border: 1px solid #444;
+        color: #ddd;
+        border-radius: 5px;
+        padding: 0.5rem;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #00ADB5;
+            box-shadow: 0 0 5px rgba(0, 173, 181, 0.5);
+        }
+
+    .btn-primary {
+        background-color: #00ADB5;
+        border: none;
+        border-radius: 5px;
+        transition: transform 0.2s;
+        padding: 0.6rem 1.5rem;
+        margin-top: 1rem;
+    }
+
+        .btn-primary:hover {
+            background-color: #008B94;
+            transform: translateY(-2px);
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #1f1f1f;
+    }
+
+        table thead {
+            background-color: #00ADB5;
+            color: #121212;
+        }
+
+        table th, table td {
+            padding: 12px;
+            border-bottom: 1px solid #2c2c2c;
+        }
+
+        table tbody tr:hover {
+            background-color: #333;
+        }
+
+    .btn-outline-primary {
+        border-color: #00ADB5;
+        color: #00ADB5;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #00ADB5;
+            color: #121212;
+        }
+
+    .logout-btn {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        background-color: #00ADB5;
+        color: #ffffff;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-family: Arial, sans-serif;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        transition: background-color 0.2s, transform 0.2s;
+        z-index: 9999;
+    }
+
+        .logout-btn:hover {
+            background-color: #008B94;
+            transform: translateY(-2px);
+        }
+
+    /* make tracker scroll internally, only vertically */
+    .leads-tracker {
+        max-height: 500px; /* adjust height as needed */
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* Comprehensive Apple device styling fix */
+    @media only screen and (-webkit-min-device-pixel-ratio: 1) {
+        .btn-primary, .btn-outline-primary, .logout-btn {
+            color: #ffffff !important;
+            background-color: #00ADB5 !important;
+        }
+
+        .btn-outline-primary {
+            background-color: transparent !important;
+            color: #00ADB5 !important;
+            border: 1px solid #00ADB5 !important;
+        }
+
+            .btn-outline-primary:hover {
+                background-color: #00ADB5 !important;
+                color: #121212 !important;
+            }
+
+        .form-select, .form-control {
+            color: #ddd !important;
+            background-color: #333 !important;
+            border-color: #444 !important;
+        }
+    }
+
+    .past-due {
+        background-color: #732121 !important;
+        color: #ffffff !important;
+        font-weight: bold;
+    }
+
+    .sortable-ghost {
+        opacity: 0.4; /* This makes the dragged row semi-transparent */
+    }
+
+    .acquired-highlight {
+        background-color: #216b21 !important; /* green highlight */
+        color: #ffffff !important; /* white text for readability */
+        font-weight: bold;
+    }
+
+    .drag-handle {
+        cursor: grab;
+        padding-right: 8px;
+        user-select: none;
+        font-size: 16px;
+    }
+
+    @keyframes flashNegotiating {
+        0% {
+            background-color: #a68a00;
+        }
+
+        50% {
+            background-color: #d4b700;
+        }
+
+        100% {
+            background-color: #a68a00;
+        }
+    }
+
+    .negotiating-flash {
+        animation: flashNegotiating 1.5s infinite ease-in-out;
+        color: #ffffff !important;
+    }
+
+    .delete-btn {
+        font-size: 16px;
+        line-height: 1;
+        cursor: pointer;
+        background: transparent;
+    }
+
+    /* Clean up View and Delete buttons */
+    .btn-outline-primary,
+    .btn-outline-danger {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: #00ADB5 !important;
+        padding: 4px 8px !important;
+    }
+
+        .btn-outline-primary:hover {
+            background-color: #00ADB5 !important;
+            color: #121212 !important;
+        }
+
+    .btn-outline-danger {
+        color: #e06c75 !important; /* softer red for delete button */
+    }
+
+        .btn-outline-danger:hover {
+            background-color: #e06c75 !important;
+            color: #ffffff !important;
+        }
+
+    /* Ensure trashcan icon blends nicely */
+    .delete-btn {
+        background: transparent !important;
+        border: none !important;
+        padding: 4px 8px !important;
+        font-size: 18px !important;
+        transition: color 0.2s ease-in-out;
+    }
+
+        .delete-btn:hover {
+            color: #ffffff !important;
+            background-color: #e06c75 !important;
+        }
+
+        /* remove ugly focus outline */
+        .btn-outline-primary:focus,
+        .btn-outline-danger:focus,
+        .delete-btn:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+
+</style>
+
+<a href="{{ url_for('login_plugin.logout') }}" class="logout-btn">Logout</a>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+<div class="container py-5">
+    <div style="display:flex; gap: 25px;">
+
+        <!-- New Lead Entry Form -->
+        <div style="flex: 1;">
+            <div class="header">
+                <h2>New Lead Entry</h2>
+            </div>
+
+            <form method="POST" class="card">
+                <div class="form-group">
+                    <label>Select Category</label>
+                    <select name="category" class="form-select" required>
+                        <option value="">Select Category *</option>
+                        {% for cat in ['Movers', 'Realtors', 'Apartments', 'Property Management', 'Insurance', 'Inspectors', 'Title Companies', 'Mortgage Companies'] %}
+                        <option>{{ cat }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Business Name</label>
+                    <input name="business_name" class="form-control" placeholder="Business Name *" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Contact Person's Name</label>
+                    <input name="contact_name" class="form-control" placeholder="Contact Person's Name">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input name="number" class="form-control" placeholder="Business Phone Number *" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Alternate Phone [Optional]</label>
+                    <input name="contact_info" class="form-control" placeholder="Alternate Phone">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input name="email" type="email" class="form-control" placeholder="Email">
+                </div>
+
+                <div class="form-group">
+                    <label>Follow-Up Date</label>
+                    <input type="date" name="follow_up" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea name="notes" class="form-control" placeholder="Initial Notes" rows="3" required></textarea>
+                </div>
+
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-primary">Save Lead</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Leads Tracker -->
+        <div style="flex: 1;">
+            <div class="header">
+                <h2>Leads Tracker</h2>
+            </div>
+
+            <div class="card leads-tracker">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Logged By</th>
+                            <th>Status</th>
+                            <th>Category</th>
+                            <th>Business Name</th>
+                            <th>Contact</th>
+                            <th>Follow-Up</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tracker-body">
+                        <!-- JS populated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        function loadTrackerData() {
+            fetch('/leads_central/leads_tracker/data')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('tracker-body');
+                    tbody.innerHTML = '';
+
+                    const today = new Date();
+
+                    data.forEach(lead => {
+                        const row = document.createElement('tr');
+                        row.dataset.id = lead.id;
+
+                        const followUpDate = lead.follow_up ? new Date(lead.follow_up + 'T00:00:00') : null;
+                        const isPastDue = followUpDate && (today > followUpDate) && lead.status !== 'Acquired';
+
+                        row.innerHTML = `
+                    <td>${lead.logged_by || '—'}</td>
+                    <td>${lead.status}</td>
+                    <td>${lead.category}</td>
+                    <td>${lead.business_name}</td>
+                    <td>${lead.contact_name || 'N/A'}</td>
+                    <td>${lead.status === 'Acquired' ? '—' : (lead.follow_up || 'N/A')}</td>
+                    <td>
+                        <a href="/leads_central/view/${lead.id}" class="btn btn-sm btn-outline-primary">View</a>
+                        <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${lead.id}">🗑️</button>
+                    </td>
+                `;
+
+                        if (lead.status === 'Acquired') {
+                            row.classList.add('acquired-highlight');
+                        } else if (lead.status === 'Negotiating') {
+                            row.classList.add('negotiating-flash');
+                        } else if (isPastDue) {
+                            row.classList.add('past-due');
+                        }
+
+                        tbody.appendChild(row);
+                    });
+
+                    attachDeleteListeners();
+                    initializeSortable();
+                });
+        }
+
+        function attachDeleteListeners() {
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    const leadId = this.dataset.id;
+                    if (confirm('Are you sure you want to permanently delete this lead?')) {
+                        fetch(`/leads_central/delete/${leadId}`, {
+                            method: 'DELETE'
+                        })
+                            .then(res => res.json())
+                            .then(result => {
+                                if (result.success) {
+                                    loadTrackerData();  // Refresh the tracker after deletion
+                                } else {
+                                    alert('Deletion failed: ' + result.error);
+                                }
+                            })
+                            .catch(() => {
+                                alert('Server error. Please try again.');
+                            });
+                    }
+                });
+            });
+        }
+
+
+        function initializeSortable() {
+            new Sortable(document.getElementById('tracker-body'), {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                handle: '.drag-handle',  // 👈 Only drag by handle
+                scroll: true,
+                scrollSensitivity: 50,
+                touchStartThreshold: 10,
+                onEnd: saveNewOrder
+            });
+        }
+
+
+    function saveNewOrder() {
+        const ordered_ids = Array.from(document.querySelectorAll('#tracker-body tr')).map(tr => tr.dataset.id);
+        fetch('/leads_central/leads_tracker/save_order', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ordered_ids})
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (!result.success) {
+                alert("Order update failed: " + result.error);
+            }
+        });
+    }
+
+    loadTrackerData();
+});
+
+
+
+</script>
+
+{% endblock %}
